@@ -1,9 +1,8 @@
 grammar ICSS;
 
-
 //Parser
-rules: var+ rule+ | rule+;
-rule: (ID | '#'+ID | '.'+ID) '{' (attributes? rules? | rules? attributes?) '}';
+stylesheet: var+ stylRule+ | stylRule+;
+stylRule: (ID | '#'+ID | '.'+ID) '{' (attributes? stylesheet? | stylesheet? attributes?) '}';
 attributes: attribute+;
 attribute: ID+':' value ';';
 value: Measurement | HexColor;//varValue
