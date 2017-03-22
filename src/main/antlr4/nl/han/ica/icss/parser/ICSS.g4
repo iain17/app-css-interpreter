@@ -1,24 +1,38 @@
 grammar ICSS;
 
 //Parser
-stylesheet: constant+ styleRule+ | styleRule+;
-styleRule: selector '{' (declarations? stylesheet? | stylesheet? declarations?) '}';
-selector: ID | '#'+ID | '.'+ID;
-declarations: declaration+;
-declaration: ID+':' (value | operation) ';';
-value: Measurement | Color | constantName;
-constantName: ('$'+ID);
-constant: constantName '=' value ';';
-operation: (value Operator value)+;
+stylesheet 	            : constants? styleRules;
+
+styleRules              : styleRule+;
+styleRule               : selector '{' declarations? styleRules? '}';
+selector                : (ID | '#' ID | '.' ID);
+
+declarations            : declaration+;
+declaration             : DeclarationType ':' declarationValue ';';
+declarationValue        : (constantValue | constantName | operation);
+
+operation               : (constantName | LiteralValue)
+                        | operation Operator operation;
+
+constants               : constant+;
+constant                : constantName '=' constantValue ';';
+constantName            : '$' ID;
+constantValue           : LiteralValue | ColorLiteral;
 
 //Lexer
-Measurement: Number Unit;
-Operator: '+' | '-';
+Operator                : '+' | '-';
 
-Color :  '#' ('0'..'9'|'a'..'f'|'A'..'F')+;
-Unit : '%'|'px';
+LiteralValue            : Number (PixelLiteral | PercentageLiteral);
 
-Number : [0-9]+;
-ID : [a-zA-Z0-9\-]+;
+PixelLiteral            : 'px';
+PercentageLiteral       : '%';
 
-WS : [ \t\r\n]+ -> skip ;
+DeclarationType         : 'background-color'
+                        | 'width'
+                        | 'color';
+
+Number                  : [0-9]+;
+ID                      : [a-zA-Z0-9\-_]+;
+ColorLiteral            : '#' [0-9a-fA-F]+;
+
+WS			            : [ \t\r\n]+ -> skip ;
