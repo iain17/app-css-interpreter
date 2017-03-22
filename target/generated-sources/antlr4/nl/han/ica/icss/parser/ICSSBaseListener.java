@@ -30,78 +30,143 @@ public class ICSSBaseListener implements ICSSListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVarValue(@NotNull ICSSParser.VarValueContext ctx) { }
+	@Override public void enterConstant(@NotNull ICSSParser.ConstantContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVarValue(@NotNull ICSSParser.VarValueContext ctx) { }
+	@Override public void exitConstant(@NotNull ICSSParser.ConstantContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVar(@NotNull ICSSParser.VarContext ctx) { }
+	@Override public void enterStyleRule(@NotNull ICSSParser.StyleRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVar(@NotNull ICSSParser.VarContext ctx) { }
+	@Override public void exitStyleRule(@NotNull ICSSParser.StyleRuleContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAttributes(@NotNull ICSSParser.AttributesContext ctx) { }
+	@Override public void enterStyleRules(@NotNull ICSSParser.StyleRulesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAttributes(@NotNull ICSSParser.AttributesContext ctx) { }
+	@Override public void exitStyleRules(@NotNull ICSSParser.StyleRulesContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAttribute(@NotNull ICSSParser.AttributeContext ctx) { }
+	@Override public void enterDeclarationValue(@NotNull ICSSParser.DeclarationValueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAttribute(@NotNull ICSSParser.AttributeContext ctx) { }
+	@Override public void exitDeclarationValue(@NotNull ICSSParser.DeclarationValueContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStylRule(@NotNull ICSSParser.StylRuleContext ctx) { }
+	@Override public void enterConstantName(@NotNull ICSSParser.ConstantNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStylRule(@NotNull ICSSParser.StylRuleContext ctx) { }
+	@Override public void exitConstantName(@NotNull ICSSParser.ConstantNameContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterValue(@NotNull ICSSParser.ValueContext ctx) { }
+	@Override public void enterSelector(@NotNull ICSSParser.SelectorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitValue(@NotNull ICSSParser.ValueContext ctx) { }
+	@Override public void exitSelector(@NotNull ICSSParser.SelectorContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConstants(@NotNull ICSSParser.ConstantsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstants(@NotNull ICSSParser.ConstantsContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDeclaration(@NotNull ICSSParser.DeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclaration(@NotNull ICSSParser.DeclarationContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOperation(@NotNull ICSSParser.OperationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOperation(@NotNull ICSSParser.OperationContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDeclarations(@NotNull ICSSParser.DeclarationsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclarations(@NotNull ICSSParser.DeclarationsContext ctx) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConstantValue(@NotNull ICSSParser.ConstantValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstantValue(@NotNull ICSSParser.ConstantValueContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

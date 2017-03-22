@@ -164,6 +164,9 @@ public class Main extends Application implements ANTLRErrorListener {
 		
 		stage.setScene(scene);
 		stage.show();
+
+		//TODO: remove this for teach
+		parseButton.fire();
 	}
 
 	private void parse() {

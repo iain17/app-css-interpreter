@@ -21,6 +21,10 @@ public class InputPane extends BorderPane {
 		
 		title = new Label("Input (ICSS):");
 		content = new TextArea();
+		//TODO: Remove this crap for the teacher.
+		content.setText("p {\n" +
+				"\tbackground-color: #ffffff;" +
+				"}");
 		title.setPadding(new Insets(5, 5, 5, 5));
 		
 		this.setTop(title);
