@@ -4,12 +4,12 @@ grammar ICSS;
 stylesheet 	            : constants? styleRules;
 
 styleRules              : styleRule+;
-styleRule               : selector '{' declarations? styleRules? '}';
+styleRule               : selector '{' declarations? styleRule? '}';
 selector                : (ID | '#' ID | '.' ID);
 
 declarations            : declaration+;
-declaration             : DeclarationType ':' declarationValue ';';
-declarationValue        : (constantValue | constantName | operation);
+declaration             : ID+':' declarationValue ';';
+declarationValue        : constantValue | constantName | operation;
 
 operation               : (constantName | LiteralValue)
                         | operation Operator operation;
@@ -26,10 +26,6 @@ LiteralValue            : Number (PixelLiteral | PercentageLiteral);
 
 PixelLiteral            : 'px';
 PercentageLiteral       : '%';
-
-DeclarationType         : 'background-color'
-                        | 'width'
-                        | 'color';
 
 Number                  : [0-9]+;
 ID                      : [a-zA-Z0-9\-_]+;
