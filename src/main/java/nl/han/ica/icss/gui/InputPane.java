@@ -2,9 +2,11 @@ package nl.han.ica.icss.gui;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.Scanner;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
@@ -22,9 +24,13 @@ public class InputPane extends BorderPane {
 		title = new Label("Input (ICSS):");
 		content = new TextArea();
 		//TODO: Remove this crap for the teacher.
-		content.setText("p {\n" +
-				"\tbackground-color: #ffffff;" +
-				"}");
+		try {
+			this.setText(new Scanner(new File("/Users/iain17/Documents/School/ASD/APP/beroepsproduct/testinput/level0.icss")).useDelimiter("\\Z").next());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+
 		title.setPadding(new Insets(5, 5, 5, 5));
 		
 		this.setTop(title);

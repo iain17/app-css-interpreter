@@ -4,31 +4,49 @@ grammar ICSS;
 stylesheet 	            : constants? styleRules;
 
 styleRules              : styleRule+;
-styleRule               : selector '{' declarations? styleRule? '}';
-selector                : (ID | '#' ID | '.' ID);
+styleRule               : selector START_BLOCK (declarations? styleRules? |  styleRules? declarations?) END_BLOCK;
+
+selector                : (selectorTag | selectorId | selectorClass);
+selectorTag             : ID;
+selectorId              : HASH ID;
+selectorClass           : DOT ID;
 
 declarations            : declaration+;
-declaration             : ID+':' declarationValue ';';
-declarationValue        : constantValue | constantName | operation;
+declaration             : ID COLON declarationValue SEMICOLON;
+declarationValue        : (constantValue | constantName | operation);
 
 operation               : (constantName | LiteralValue)
                         | operation Operator operation;
 
 constants               : constant+;
-constant                : constantName '=' constantValue ';';
-constantName            : '$' ID;
-constantValue           : LiteralValue | ColorLiteral;
+constant                : constantName EQUALS constantValue SEMICOLON;
+constantName            : DOLLAR ID;
+constantValue           : LiteralValue #valueLiteral
+                        | ColorLiteral #colorLiteral;
 
 //Lexer
-Operator                : '+' | '-';
+Operator                : PLUS | MINUS;
 
-LiteralValue            : Number (PixelLiteral | PercentageLiteral);
+LiteralValue            : INT (PixelLiteral | PercentageLiteral);
+
+ID                      : [a-zA-Z0-9\-_]+;
+INT                     : [0-9]+;
+
+ColorLiteral            : HASH HexaDecimal HexaDecimal HexaDecimal HexaDecimal HexaDecimal HexaDecimal;
+HexaDecimal             : [0-9a-fA-F];
 
 PixelLiteral            : 'px';
 PercentageLiteral       : '%';
 
-Number                  : [0-9]+;
-ID                      : [a-zA-Z0-9\-_]+;
-ColorLiteral            : '#' [0-9a-fA-F]+;
+START_BLOCK             : '{';
+END_BLOCK               : '}';
+EQUALS                  : '=';
+DOLLAR                  : '$';
+HASH                    : '#';
+DOT                     : '.';
+SEMICOLON               : ';';
+COLON                   : ':';
+PLUS                    : '+';
+MINUS                   : '-';
 
 WS			            : [ \t\r\n]+ -> skip ;
