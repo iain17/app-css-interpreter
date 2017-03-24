@@ -26,6 +26,23 @@ public class ASTListener extends ICSSBaseListener {
 		stack = new Stack();
 	}
 
+    @Override public void enterConstant(@NotNull ICSSParser.ConstantContext ctx) {
+        Assignment assignment = new Assignment();
+        assignment.name = new ConstantReference(ctx.constantName().getText());
+        stack.add(assignment);
+    }
+
+    @Override public void exitConstant(@NotNull ICSSParser.ConstantContext ctx) {
+        if(stack.peek() instanceof Assignment) {
+            Assignment assignment = (Assignment) stack.pop();
+            if(assignment.value == null) {
+                System.out.printf("%s has no value", assignment.name.name);
+                return;
+            }
+            ast.root.addChild(assignment);
+        }
+    }
+
     @Override public void enterStyleRule(@NotNull ICSSParser.StyleRuleContext ctx) {
         Stylerule rule = new Stylerule();
         rule.selector = new Selector();
@@ -65,6 +82,11 @@ public class ASTListener extends ICSSBaseListener {
             Declaration declaration = (Declaration) stack.peek();
             declaration.value = value;
         }
+
+        if(stack.peek() instanceof Assignment) {
+            Assignment assignment = (Assignment) stack.peek();
+            assignment.value = value;
+        }
     }
 
     @Override public void enterValueLiteral(@NotNull ICSSParser.ValueLiteralContext ctx) {
@@ -76,9 +98,23 @@ public class ASTListener extends ICSSBaseListener {
         if(sValue.contains("px")) {
             value = new PixelLiteral(sValue);
         }
+
         if(stack.peek() instanceof Declaration) {
             Declaration declaration = (Declaration) stack.peek();
             declaration.value = value;
+        }
+
+        if(stack.peek() instanceof Assignment) {
+            Assignment assignment = (Assignment) stack.peek();
+            assignment.value = value;
+        }
+    }
+
+    @Override public void enterConstantName(@NotNull ICSSParser.ConstantNameContext ctx) {
+	    String name = ctx.ID().getText();
+        if(stack.peek() instanceof Declaration) {
+            Declaration declaration = (Declaration) stack.peek();
+            declaration.value = new ConstantReference(name);
         }
     }
 
@@ -102,9 +138,4 @@ public class ASTListener extends ICSSBaseListener {
             ast.root.addChild(rule);
         }
 	}
-
-    @Override public void exitStylesheet(@NotNull ICSSParser.StylesheetContext ctx) {
-        System.out.println();
-    }
-
 }

@@ -8,6 +8,7 @@ nl/han/ica/icss/gui/Main$5.class
 nl/han/ica/icss/parser/ASTListener.class
 nl/han/ica/icss/gui/ASTPane$1.class
 nl/han/ica/icss/parser/ICSSParser$DeclarationContext.class
+nl/han/ica/icss/parser/ICSSParser$ValueLiteralContext.class
 nl/han/ica/icss/gui/OutputPane.class
 nl/han/ica/icss/transforms/Transform.class
 nl/han/ica/icss/checker/SemanticError.class
@@ -17,12 +18,14 @@ nl/han/ica/icss/parser/ICSSParser$SelectorContext.class
 nl/han/ica/icss/ast/AST.class
 nl/han/ica/icss/parser/ICSSParser$DeclarationValueContext.class
 nl/han/ica/icss/ast/PixelLiteral.class
+nl/han/ica/icss/parser/ICSSParser$ColorLiteralContext.class
 nl/han/ica/icss/parser/ICSSParser$StyleRuleContext.class
 nl/han/ica/icss/parser/ICSSListener.class
 nl/han/ica/icss/gui/Main$1.class
 nl/han/ica/icss/ast/Operation$Operator.class
 nl/han/ica/icss/ast/ASTNode.class
 nl/han/ica/icss/parser/ICSSParser$OperationContext.class
+nl/han/ica/icss/parser/ICSSParser$SelectorIdContext.class
 nl/han/ica/icss/transforms/InlineConstants.class
 nl/han/ica/icss/parser/ICSSParser$StyleRulesContext.class
 nl/han/ica/icss/gui/ASTPane.class
@@ -45,8 +48,10 @@ nl/han/ica/icss/parser/ICSSBaseListener.class
 nl/han/ica/icss/gui/Main$2.class
 nl/han/ica/icss/ast/ConstantReference.class
 nl/han/ica/icss/checker/Checker.class
+nl/han/ica/icss/parser/ICSSParser$SelectorTagContext.class
 nl/han/ica/icss/gui/Main$6.class
 nl/han/ica/icss/ast/ColorLiteral.class
 nl/han/ica/icss/gui/Main.class
+nl/han/ica/icss/parser/ICSSParser$SelectorClassContext.class
 nl/han/ica/icss/ast/Declaration.class
 nl/han/ica/icss/gui/InputPane.class

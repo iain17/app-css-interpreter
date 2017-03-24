@@ -1,7 +1,7 @@
 grammar ICSS;
 
 //Parser
-stylesheet 	            : constants? styleRules;
+stylesheet 	            : constants? styleRules?;
 
 styleRules              : styleRule+;
 styleRule               : selector START_BLOCK (declarations? styleRules? |  styleRules? declarations?) END_BLOCK;
@@ -13,7 +13,9 @@ selectorClass           : DOT ID;
 
 declarations            : declaration+;
 declaration             : ID COLON declarationValue SEMICOLON;
-declarationValue        : (constantValue | constantName | operation);
+declarationValue        : (constantValue
+                            | constantName
+                            | operation);
 
 operation               : (constantName | LiteralValue)
                         | operation Operator operation;
