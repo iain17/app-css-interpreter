@@ -1,5 +1,6 @@
 package nl.han.ica.icss.parser;
 
+import java.util.Objects;
 import java.util.Stack;
 
 import nl.han.ica.icss.ast.*;
@@ -87,6 +88,16 @@ public class ASTListener extends ICSSBaseListener {
             Assignment assignment = (Assignment) stack.peek();
             assignment.value = value;
         }
+
+        if (stack.peek() instanceof Operation) {
+            Operation operation = (Operation) stack.peek();
+            if(operation.lhs == null) {
+                operation.lhs = value;
+            }
+            if(operation.rhs == null) {
+                operation.rhs = value;
+            }
+        }
     }
 
     @Override public void enterValueLiteral(@NotNull ICSSParser.ValueLiteralContext ctx) {
@@ -108,14 +119,66 @@ public class ASTListener extends ICSSBaseListener {
             Assignment assignment = (Assignment) stack.peek();
             assignment.value = value;
         }
+
+        if (stack.peek() instanceof Operation) {
+            Operation operation = (Operation) stack.peek();
+            if(operation.lhs == null) {
+                operation.lhs = value;
+            }else if(operation.rhs == null) {
+                operation.rhs = value;
+            }
+        }
     }
 
     @Override public void enterConstantName(@NotNull ICSSParser.ConstantNameContext ctx) {
-	    String name = ctx.ID().getText();
-        if(stack.peek() instanceof Declaration) {
+        String name = ctx.ID().getText();
+        Value value = new ConstantReference(name);
+        if (stack.peek() instanceof Declaration) {
             Declaration declaration = (Declaration) stack.peek();
-            declaration.value = new ConstantReference(name);
+            declaration.value = value;
         }
+
+        if (stack.peek() instanceof Operation) {
+            Operation operation = (Operation) stack.peek();
+            if(operation.lhs == null) {
+                operation.lhs = value;
+            }else if(operation.rhs == null) {
+                operation.rhs = value;
+            }
+        }
+    }
+
+    @Override public void exitOperation(@NotNull ICSSParser.OperationContext ctx) {
+        if(stack.peek() instanceof Operation) {
+            Operation operation = (Operation) stack.pop();
+            if(operation.lhs == null || operation.rhs == null) {
+                System.out.printf("operation has no lhs(%s) or rhs(%s)", operation.lhs, operation.rhs);
+                return;
+            }
+            ASTNode parent = (ASTNode)stack.peek();
+            if(parent instanceof Declaration) {
+                ((Declaration) parent).value = operation;
+            } else {
+                parent.addChild(operation);
+            }
+        }
+    }
+
+    @Override public void enterOperation(@NotNull ICSSParser.OperationContext ctx) {
+	    Operation operation = new Operation();
+	    if(ctx.Operator() != null) {
+            switch (ctx.Operator().getText()) {
+                case "+":
+                    operation.operator = Operation.Operator.PLUS;
+                    break;
+                case "-":
+                    operation.operator = Operation.Operator.MIN;
+                    break;
+                default:
+                    System.out.printf("Missing operator mapping of %s", ctx.Operator().getText());
+            }
+            stack.push(operation);
+	    }
     }
 
     @Override public void exitDeclaration(@NotNull ICSSParser.DeclarationContext ctx) {
@@ -135,7 +198,18 @@ public class ASTListener extends ICSSBaseListener {
 	@Override public void exitStyleRule(@NotNull ICSSParser.StyleRuleContext ctx) {
 	    if(stack.peek() instanceof Stylerule) {
             Stylerule rule = (Stylerule) stack.pop();
-            ast.root.addChild(rule);
+
+            ASTNode parent = null;
+            if(!stack.empty()) {
+                parent = (ASTNode) stack.pop();
+            } else {
+                parent = ast.root;
+            }
+            parent.addChild(rule);
         }
 	}
+
+    @Override public void exitStylesheet(@NotNull ICSSParser.StylesheetContext ctx) {
+        System.out.println("abc");
+    }
 }

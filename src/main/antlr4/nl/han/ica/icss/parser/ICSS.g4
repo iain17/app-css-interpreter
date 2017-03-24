@@ -17,8 +17,7 @@ declarationValue        : (constantValue
                             | constantName
                             | operation);
 
-operation               : (constantName | LiteralValue)
-                        | operation Operator operation;
+operation               : (constantName | LiteralValue) | operation Operator operation;
 
 constants               : constant+;
 constant                : constantName EQUALS constantValue SEMICOLON;
