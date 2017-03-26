@@ -13,4 +13,9 @@ public class PercentageLiteral extends Literal {
     public String getNodeLabel() {
         return "Percentage literal (" + value + ")";
     }
+
+    //Added this to simplify the css generation.
+    public String toString() {
+        return String.valueOf(value)+"%";
+    }
 }

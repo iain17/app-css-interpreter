@@ -169,7 +169,8 @@ public class Main extends Application implements ANTLRErrorListener {
 		parseButton.fire();
 		checkButton.fire();
 		transformButton.fire();
-	}
+        generateButton.fire();
+    }
 
 	private void parse() {
 	    feedbackPane.clear();

@@ -14,4 +14,8 @@ public class PixelLiteral extends Literal {
         return "Pixel literal (" + value + ")";
     }
 
+    //Added this to simplify the css generation.
+    public String toString() {
+        return String.valueOf(value)+"px";
+    }
 }

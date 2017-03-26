@@ -9,13 +9,15 @@ public class Selector extends ASTNode {
     public String getNodeLabel() {
         return "Selector";
     }
+
+    //Changed it so that it returns # or . if it is a class or id. To simplify the css generation.
     @Override
     public String toString() {
         if(tag != null)
             return tag;
 		else if(cls != null)
-		    return cls;
+		    return "."+cls;
 		else
-            return id;
+            return "#"+id;
     }
 }
