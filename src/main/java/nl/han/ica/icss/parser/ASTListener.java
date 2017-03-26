@@ -202,15 +202,11 @@ public class ASTListener extends ICSSBaseListener {
 
             ASTNode parent = null;
             if(!stack.empty()) {
-                parent = (ASTNode) stack.pop();
+                parent = (ASTNode) stack.peek();
             } else {
                 parent = ast.root;
             }
             parent.addChild(rule);
         }
 	}
-
-    @Override public void exitStylesheet(@NotNull ICSSParser.StylesheetContext ctx) {
-        System.out.println("abc");
-    }
 }
