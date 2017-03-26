@@ -29,7 +29,7 @@ public class ASTListener extends ICSSBaseListener {
 
     @Override public void enterConstant(@NotNull ICSSParser.ConstantContext ctx) {
         Assignment assignment = new Assignment();
-        assignment.name = new ConstantReference(ctx.constantName().getText());
+        assignment.name = new ConstantReference(ctx.constantName().getText().replace("$", ""));
         stack.add(assignment);
     }
 
