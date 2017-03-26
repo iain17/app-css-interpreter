@@ -15,9 +15,9 @@ declarations            : declaration+;
 declaration             : ID COLON declarationValue SEMICOLON;
 declarationValue        : (constantValue
                             | constantName
-                            | operation);
+                            | operation+);
 
-operation               : (constantName | LiteralValue) | operation Operator operation;
+operation               : (constantValue | constantName) Operator? operation?;
 
 constants               : constant+;
 constant                : constantName EQUALS constantValue SEMICOLON;

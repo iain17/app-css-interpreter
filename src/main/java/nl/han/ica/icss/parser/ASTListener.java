@@ -166,6 +166,7 @@ public class ASTListener extends ICSSBaseListener {
 
     @Override public void enterOperation(@NotNull ICSSParser.OperationContext ctx) {
 	    Operation operation = new Operation();
+	    //If its an operation with an operator it is worth to put on the stack. Otherwise its just part of the value of another operator.
 	    if(ctx.Operator() != null) {
             switch (ctx.Operator().getText()) {
                 case "+":

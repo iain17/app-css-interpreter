@@ -22,10 +22,8 @@ public class InputPane extends BorderPane {
 		title = new Label("Input (ICSS):");
 		content = new TextArea();
 		//TODO: Remove this crap for the teacher.
-		content.setText("$parwidth = 500px;\n" +
-                "\n" +
-                "#menu {\n" +
-                "\twidth: $parwidth + 20px;\n" +
+		content.setText("#menu {\n" +
+                "\twidth: 50px + 20px + 100px;\n" +
                 "}" +
                 "");
 		title.setPadding(new Insets(5, 5, 5, 5));
