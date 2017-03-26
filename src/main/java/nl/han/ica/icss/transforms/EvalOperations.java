@@ -59,6 +59,7 @@ public class EvalOperations implements Transform {
         }
         return null;
     }
+
     private int getValues(Operation operation) {
         int lhs = getValue(operation.lhs);
         int rhs = getValue(operation.rhs);
