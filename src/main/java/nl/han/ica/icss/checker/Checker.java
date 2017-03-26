@@ -1,9 +1,6 @@
 package nl.han.ica.icss.checker;
 
-import java.awt.*;
 import java.util.*;
-
-import com.sun.tools.internal.jxc.ap.Const;
 import nl.han.ica.icss.ast.*;
 
 public class Checker {
