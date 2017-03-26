@@ -15,10 +15,13 @@ public class Checker {
         UNDEFINED
     }
 
-    //http://stackoverflow.com/questions/13445701/how-to-create-a-static-map-of-string-array
+    //Rules for CH03 and CH04. Only added the ones referenced in the levels.
     private static final Map<String, ArrayList<ValueType>> semantics = Collections.unmodifiableMap(
         new HashMap<String, ArrayList<ValueType>>() {{
-            put("width", new ArrayList<>(Arrays.asList(ValueType.PIXELVALUE)));
+            put("width", new ArrayList<>(Arrays.asList(ValueType.PIXELVALUE, ValueType.PERCENTAGE)));
+            put("height", new ArrayList<>(Arrays.asList(ValueType.PIXELVALUE, ValueType.PERCENTAGE)));
+            put("color", new ArrayList<>(Arrays.asList(ValueType.COLORVALUE)));
+            put("background-color", new ArrayList<>(Arrays.asList(ValueType.COLORVALUE)));
         }}
     );
 
