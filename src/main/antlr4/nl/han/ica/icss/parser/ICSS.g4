@@ -20,7 +20,7 @@ declarationValue        : (constantValue
 operation               : (constantValue | constantName) Operator? operation?;
 
 constants               : constant+;
-constant                : constantName EQUALS constantValue SEMICOLON;
+constant                : constantName EQUALS (constantValue | operation) SEMICOLON;
 constantName            : DOLLAR ID;
 constantValue           : LiteralValue #valueLiteral
                         | ColorLiteral #colorLiteral;

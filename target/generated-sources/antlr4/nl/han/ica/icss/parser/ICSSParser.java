@@ -761,6 +761,9 @@ public class ICSSParser extends Parser {
 		public ConstantValueContext constantValue() {
 			return getRuleContext(ConstantValueContext.class,0);
 		}
+		public OperationContext operation() {
+			return getRuleContext(OperationContext.class,0);
+		}
 		public ConstantNameContext constantName() {
 			return getRuleContext(ConstantNameContext.class,0);
 		}
@@ -786,8 +789,21 @@ public class ICSSParser extends Parser {
 			{
 			setState(106); constantName();
 			setState(107); match(EQUALS);
-			setState(108); constantValue();
-			setState(109); match(SEMICOLON);
+			setState(110);
+			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
+			case 1:
+				{
+				setState(108); constantValue();
+				}
+				break;
+
+			case 2:
+				{
+				setState(109); operation();
+				}
+				break;
+			}
+			setState(112); match(SEMICOLON);
 			}
 		}
 		catch (RecognitionException re) {
@@ -824,8 +840,8 @@ public class ICSSParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(111); match(DOLLAR);
-			setState(112); match(ID);
+			setState(114); match(DOLLAR);
+			setState(115); match(ID);
 			}
 		}
 		catch (RecognitionException re) {
@@ -879,20 +895,20 @@ public class ICSSParser extends Parser {
 		ConstantValueContext _localctx = new ConstantValueContext(_ctx, getState());
 		enterRule(_localctx, 28, RULE_constantValue);
 		try {
-			setState(116);
+			setState(119);
 			switch (_input.LA(1)) {
 			case LiteralValue:
 				_localctx = new ValueLiteralContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(114); match(LiteralValue);
+				setState(117); match(LiteralValue);
 				}
 				break;
 			case ColorLiteral:
 				_localctx = new ColorLiteralContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(115); match(ColorLiteral);
+				setState(118); match(ColorLiteral);
 				}
 				break;
 			default:
@@ -911,36 +927,36 @@ public class ICSSParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\25y\4\2\t\2\4\3\t"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\25|\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
 		"\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\3\2\5\2\"\n\2\3\2\5\2%\n"+
 		"\2\3\3\6\3(\n\3\r\3\16\3)\3\4\3\4\3\4\5\4/\n\4\3\4\5\4\62\n\4\3\4\5\4"+
 		"\65\n\4\3\4\5\48\n\4\5\4:\n\4\3\4\3\4\3\5\3\5\3\5\5\5A\n\5\3\6\3\6\3\7"+
 		"\3\7\3\7\3\b\3\b\3\b\3\t\6\tL\n\t\r\t\16\tM\3\n\3\n\3\n\3\n\3\n\3\13\3"+
 		"\13\3\13\6\13X\n\13\r\13\16\13Y\5\13\\\n\13\3\f\3\f\5\f`\n\f\3\f\5\fc"+
-		"\n\f\3\f\5\ff\n\f\3\r\6\ri\n\r\r\r\16\rj\3\16\3\16\3\16\3\16\3\16\3\17"+
-		"\3\17\3\17\3\20\3\20\5\20w\n\20\3\20\2\2\21\2\4\6\b\n\f\16\20\22\24\26"+
-		"\30\32\34\36\2\2|\2!\3\2\2\2\4\'\3\2\2\2\6+\3\2\2\2\b@\3\2\2\2\nB\3\2"+
-		"\2\2\fD\3\2\2\2\16G\3\2\2\2\20K\3\2\2\2\22O\3\2\2\2\24[\3\2\2\2\26_\3"+
-		"\2\2\2\30h\3\2\2\2\32l\3\2\2\2\34q\3\2\2\2\36v\3\2\2\2 \"\5\30\r\2! \3"+
-		"\2\2\2!\"\3\2\2\2\"$\3\2\2\2#%\5\4\3\2$#\3\2\2\2$%\3\2\2\2%\3\3\2\2\2"+
-		"&(\5\6\4\2\'&\3\2\2\2()\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*\5\3\2\2\2+,\5\b"+
-		"\5\2,9\7\13\2\2-/\5\20\t\2.-\3\2\2\2./\3\2\2\2/\61\3\2\2\2\60\62\5\4\3"+
-		"\2\61\60\3\2\2\2\61\62\3\2\2\2\62:\3\2\2\2\63\65\5\4\3\2\64\63\3\2\2\2"+
-		"\64\65\3\2\2\2\65\67\3\2\2\2\668\5\20\t\2\67\66\3\2\2\2\678\3\2\2\28:"+
-		"\3\2\2\29.\3\2\2\29\64\3\2\2\2:;\3\2\2\2;<\7\f\2\2<\7\3\2\2\2=A\5\n\6"+
-		"\2>A\5\f\7\2?A\5\16\b\2@=\3\2\2\2@>\3\2\2\2@?\3\2\2\2A\t\3\2\2\2BC\7\5"+
-		"\2\2C\13\3\2\2\2DE\7\17\2\2EF\7\5\2\2F\r\3\2\2\2GH\7\20\2\2HI\7\5\2\2"+
-		"I\17\3\2\2\2JL\5\22\n\2KJ\3\2\2\2LM\3\2\2\2MK\3\2\2\2MN\3\2\2\2N\21\3"+
-		"\2\2\2OP\7\5\2\2PQ\7\22\2\2QR\5\24\13\2RS\7\21\2\2S\23\3\2\2\2T\\\5\36"+
-		"\20\2U\\\5\34\17\2VX\5\26\f\2WV\3\2\2\2XY\3\2\2\2YW\3\2\2\2YZ\3\2\2\2"+
-		"Z\\\3\2\2\2[T\3\2\2\2[U\3\2\2\2[W\3\2\2\2\\\25\3\2\2\2]`\5\36\20\2^`\5"+
-		"\34\17\2_]\3\2\2\2_^\3\2\2\2`b\3\2\2\2ac\7\3\2\2ba\3\2\2\2bc\3\2\2\2c"+
-		"e\3\2\2\2df\5\26\f\2ed\3\2\2\2ef\3\2\2\2f\27\3\2\2\2gi\5\32\16\2hg\3\2"+
-		"\2\2ij\3\2\2\2jh\3\2\2\2jk\3\2\2\2k\31\3\2\2\2lm\5\34\17\2mn\7\r\2\2n"+
-		"o\5\36\20\2op\7\21\2\2p\33\3\2\2\2qr\7\16\2\2rs\7\5\2\2s\35\3\2\2\2tw"+
-		"\7\4\2\2uw\7\7\2\2vt\3\2\2\2vu\3\2\2\2w\37\3\2\2\2\23!$).\61\64\679@M"+
-		"Y[_bejv";
+		"\n\f\3\f\5\ff\n\f\3\r\6\ri\n\r\r\r\16\rj\3\16\3\16\3\16\3\16\5\16q\n\16"+
+		"\3\16\3\16\3\17\3\17\3\17\3\20\3\20\5\20z\n\20\3\20\2\2\21\2\4\6\b\n\f"+
+		"\16\20\22\24\26\30\32\34\36\2\2\u0080\2!\3\2\2\2\4\'\3\2\2\2\6+\3\2\2"+
+		"\2\b@\3\2\2\2\nB\3\2\2\2\fD\3\2\2\2\16G\3\2\2\2\20K\3\2\2\2\22O\3\2\2"+
+		"\2\24[\3\2\2\2\26_\3\2\2\2\30h\3\2\2\2\32l\3\2\2\2\34t\3\2\2\2\36y\3\2"+
+		"\2\2 \"\5\30\r\2! \3\2\2\2!\"\3\2\2\2\"$\3\2\2\2#%\5\4\3\2$#\3\2\2\2$"+
+		"%\3\2\2\2%\3\3\2\2\2&(\5\6\4\2\'&\3\2\2\2()\3\2\2\2)\'\3\2\2\2)*\3\2\2"+
+		"\2*\5\3\2\2\2+,\5\b\5\2,9\7\13\2\2-/\5\20\t\2.-\3\2\2\2./\3\2\2\2/\61"+
+		"\3\2\2\2\60\62\5\4\3\2\61\60\3\2\2\2\61\62\3\2\2\2\62:\3\2\2\2\63\65\5"+
+		"\4\3\2\64\63\3\2\2\2\64\65\3\2\2\2\65\67\3\2\2\2\668\5\20\t\2\67\66\3"+
+		"\2\2\2\678\3\2\2\28:\3\2\2\29.\3\2\2\29\64\3\2\2\2:;\3\2\2\2;<\7\f\2\2"+
+		"<\7\3\2\2\2=A\5\n\6\2>A\5\f\7\2?A\5\16\b\2@=\3\2\2\2@>\3\2\2\2@?\3\2\2"+
+		"\2A\t\3\2\2\2BC\7\5\2\2C\13\3\2\2\2DE\7\17\2\2EF\7\5\2\2F\r\3\2\2\2GH"+
+		"\7\20\2\2HI\7\5\2\2I\17\3\2\2\2JL\5\22\n\2KJ\3\2\2\2LM\3\2\2\2MK\3\2\2"+
+		"\2MN\3\2\2\2N\21\3\2\2\2OP\7\5\2\2PQ\7\22\2\2QR\5\24\13\2RS\7\21\2\2S"+
+		"\23\3\2\2\2T\\\5\36\20\2U\\\5\34\17\2VX\5\26\f\2WV\3\2\2\2XY\3\2\2\2Y"+
+		"W\3\2\2\2YZ\3\2\2\2Z\\\3\2\2\2[T\3\2\2\2[U\3\2\2\2[W\3\2\2\2\\\25\3\2"+
+		"\2\2]`\5\36\20\2^`\5\34\17\2_]\3\2\2\2_^\3\2\2\2`b\3\2\2\2ac\7\3\2\2b"+
+		"a\3\2\2\2bc\3\2\2\2ce\3\2\2\2df\5\26\f\2ed\3\2\2\2ef\3\2\2\2f\27\3\2\2"+
+		"\2gi\5\32\16\2hg\3\2\2\2ij\3\2\2\2jh\3\2\2\2jk\3\2\2\2k\31\3\2\2\2lm\5"+
+		"\34\17\2mp\7\r\2\2nq\5\36\20\2oq\5\26\f\2pn\3\2\2\2po\3\2\2\2qr\3\2\2"+
+		"\2rs\7\21\2\2s\33\3\2\2\2tu\7\16\2\2uv\7\5\2\2v\35\3\2\2\2wz\7\4\2\2x"+
+		"z\7\7\2\2yw\3\2\2\2yx\3\2\2\2z\37\3\2\2\2\24!$).\61\64\679@MY[_bejpy";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
