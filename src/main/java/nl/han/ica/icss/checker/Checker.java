@@ -57,12 +57,12 @@ public class Checker {
 
     public void checkStyleRule(Stylerule rule) {
         for(ASTNode node : rule.getChildren()) {
-//            if(rule instanceof Stylerule) {
-//                checkStyleRule((Stylerule)node);
-//                continue;
-//            }
             if(node instanceof Declaration) {
                 checkDeclaration((Declaration)node);
+                continue;
+            }
+            if(rule instanceof Stylerule) {
+                checkStyleRule((Stylerule)node);
                 continue;
             }
         }
@@ -71,14 +71,39 @@ public class Checker {
     public void checkDeclaration(Declaration declaration) {
         //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
         if(declaration.value instanceof ConstantReference) {
-            ConstantReference reference = (ConstantReference)declaration.value;
-            if(!symboltable.containsKey(reference.name)) {
-                reference.setError(String.format("CH01: Undefined reference to constant '%s'", reference.name));
-            }
+            checkConstantReference((ConstantReference)declaration.value);
+        }
+
+        if(declaration.value instanceof Operation) {
+            checkOperation((Operation) declaration.value);
         }
 //        for(ASTNode node : declaration.getChildren()) {
 //            System.out.println("a");
 //        }
+    }
+
+    public void checkOperation(Operation operation) {
+	    //lhs
+	    if(operation.lhs instanceof ConstantReference) {
+	        checkConstantReference((ConstantReference)operation.lhs);
+        }
+        if(operation.lhs instanceof Operation) {
+            checkOperation((Operation) operation.lhs);
+        }
+        //rhs
+        if(operation.rhs instanceof ConstantReference) {
+            checkConstantReference((ConstantReference)operation.rhs);
+        }
+        if(operation.rhs instanceof Operation) {
+            checkOperation((Operation) operation.rhs);
+        }
+    }
+
+    public void checkConstantReference(ConstantReference reference) {
+        //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
+        if(!symboltable.containsKey(reference.name)) {
+            reference.setError(String.format("CH01: Undefined reference to constant '%s'", reference.name));
+        }
     }
 
 }
