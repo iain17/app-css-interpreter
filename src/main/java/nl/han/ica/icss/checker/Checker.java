@@ -1,7 +1,9 @@
 package nl.han.ica.icss.checker;
 
-import java.util.HashMap;
+import java.awt.*;
+import java.util.*;
 
+import com.sun.tools.internal.jxc.ap.Const;
 import nl.han.ica.icss.ast.*;
 
 public class Checker {
@@ -12,6 +14,13 @@ public class Checker {
         COLORVALUE,
         UNDEFINED
     }
+
+    //http://stackoverflow.com/questions/13445701/how-to-create-a-static-map-of-string-array
+    private static final Map<String, ArrayList<ValueType>> semantics = Collections.unmodifiableMap(
+        new HashMap<String, ArrayList<ValueType>>() {{
+            put("width", new ArrayList<>(Arrays.asList(ValueType.PIXELVALUE)));
+        }}
+    );
 
     private HashMap<String,Value> symboltable;
 
@@ -76,10 +85,58 @@ public class Checker {
 
         if(declaration.value instanceof Operation) {
             checkOperation((Operation) declaration.value);
+        } else {
+            if (semantics.containsKey(declaration.property)) {
+                checkValue("property " + declaration.property, declaration.value, semantics.get(declaration.property));
+            }
         }
-//        for(ASTNode node : declaration.getChildren()) {
-//            System.out.println("a");
-//        }
+    }
+
+    public void checkValue(String name, Value value, ArrayList<ValueType> accepts) {
+        ValueType type = getValueType(value);
+        if(!accepts.contains(type)) {
+            switch(type) {
+                case PIXELVALUE:
+                    value.setError(String.format("CH04: Unexpected pixel value for %s", name));
+                    break;
+                case PERCENTAGE:
+                    value.setError(String.format("CH04: Unexpected percentage value for %s", name));
+                    break;
+                case COLORVALUE:
+                    value.setError(String.format("CH04: Unexpected color value for %s", name));
+                    break;
+                case UNDEFINED:
+                    value.setError(String.format("CH04: Unexpected undefined value for %s", name));
+                    break;
+            }
+        }
+    }
+
+    public ValueType getValueType(Value value) {
+	    if(value instanceof PixelLiteral) {
+	        return ValueType.PIXELVALUE;
+        }
+
+        if(value instanceof PercentageLiteral) {
+            return ValueType.PERCENTAGE;
+        }
+
+        if(value instanceof ColorLiteral) {
+	        return ValueType.COLORVALUE;
+        }
+
+        if(value instanceof Operation) {
+	        return getValueType(((Operation)value).lhs);
+        }
+
+        if(value instanceof ConstantReference) {
+	        ConstantReference reference = (ConstantReference)value;
+            if(symboltable.containsKey(reference.name)) {
+                Value refValue = symboltable.get(reference.name);
+                return getValueType(refValue);
+            }
+        }
+        return ValueType.UNDEFINED;
     }
 
     public void checkOperation(Operation operation) {
@@ -96,6 +153,11 @@ public class Checker {
         }
         if(operation.rhs instanceof Operation) {
             checkOperation((Operation) operation.rhs);
+        }
+        ValueType lhsType = getValueType(operation.lhs);
+        ValueType rhsType = getValueType(operation.rhs);
+        if(rhsType != lhsType) {
+            operation.setError(String.format("CH03: operation type mismatch. Right type (%s) is not of the same type as left (%s).", rhsType, lhsType));
         }
     }
 
