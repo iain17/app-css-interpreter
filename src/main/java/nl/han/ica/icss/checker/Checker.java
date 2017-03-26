@@ -85,10 +85,10 @@ public class Checker {
 
         if(declaration.value instanceof Operation) {
             checkOperation((Operation) declaration.value);
-        } else {
-            if (semantics.containsKey(declaration.property)) {
-                checkValue("property " + declaration.property, declaration.value, semantics.get(declaration.property));
-            }
+        }
+
+        if (semantics.containsKey(declaration.property)) {
+            checkValue("property " + declaration.property, declaration.value, semantics.get(declaration.property));
         }
     }
 

@@ -26,7 +26,7 @@ public class InputPane extends BorderPane {
                 "$parwidth = 500px;\n" +
                 "\n" +
                 "p {\n" +
-                "\twidth: $parwidth - #ff0000;\n" +
+                "\twidth: #ff0000 + #ff0000;\n" +
                 "}");
 		title.setPadding(new Insets(5, 5, 5, 5));
 		
