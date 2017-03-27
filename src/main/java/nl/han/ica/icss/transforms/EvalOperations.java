@@ -63,6 +63,9 @@ public class EvalOperations implements Transform {
     private int getValues(Operation operation) {
         int lhs = getValue(operation.lhs);
         int rhs = getValue(operation.rhs);
+        if(operation.operator == Operation.Operator.MIN) {
+            return lhs - rhs;
+        }
         return lhs + rhs;
     }
 
