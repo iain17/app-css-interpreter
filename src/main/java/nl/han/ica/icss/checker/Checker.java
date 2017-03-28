@@ -41,7 +41,7 @@ public class Checker {
 	}
 
     //CH02: Controleer of er geen constantes worden gedefinieerd die al bestaan.
-	public void addVars(AST ast) {
+    private void addVars(AST ast) {
 	    for(ASTNode node : ast.root.body) {
 	        if(!(node instanceof Assignment)) {
 	            continue;
@@ -56,7 +56,7 @@ public class Checker {
         }
     }
 
-    public void checkStylerules(AST ast) {
+    private void checkStylerules(AST ast) {
         for(ASTNode node : ast.root.body) {
             if(node instanceof Stylerule) {
                 checkStyleRule((Stylerule)node);
@@ -64,20 +64,20 @@ public class Checker {
         }
     }
 
-    public void checkStyleRule(Stylerule rule) {
+    private void checkStyleRule(Stylerule rule) {
         for(ASTNode node : rule.getChildren()) {
             if(node instanceof Declaration) {
                 checkDeclaration((Declaration)node);
                 continue;
             }
-            if(rule instanceof Stylerule) {
+            if(node instanceof Stylerule) {
                 checkStyleRule((Stylerule)node);
                 continue;
             }
         }
     }
 
-    public void checkDeclaration(Declaration declaration) {
+    private void checkDeclaration(Declaration declaration) {
         //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
         if(declaration.value instanceof ConstantReference) {
             checkConstantReference((ConstantReference)declaration.value);
@@ -92,7 +92,7 @@ public class Checker {
         }
     }
 
-    public void checkValue(String name, Value value, ArrayList<ValueType> accepts) {
+    private void checkValue(String name, Value value, ArrayList<ValueType> accepts) {
         ValueType type = getValueType(value);
         if(!accepts.contains(type)) {
             switch(type) {
@@ -112,7 +112,7 @@ public class Checker {
         }
     }
 
-    public ValueType getValueType(Value value) {
+    private ValueType getValueType(Value value) {
 	    if(value instanceof PixelLiteral) {
 	        return ValueType.PIXELVALUE;
         }
@@ -139,7 +139,7 @@ public class Checker {
         return ValueType.UNDEFINED;
     }
 
-    public void checkOperation(Operation operation) {
+    private void checkOperation(Operation operation) {
 	    //lhs
 	    if(operation.lhs instanceof ConstantReference) {
 	        checkConstantReference((ConstantReference)operation.lhs);
@@ -161,7 +161,7 @@ public class Checker {
         }
     }
 
-    public void checkConstantReference(ConstantReference reference) {
+    private void checkConstantReference(ConstantReference reference) {
         //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
         if(!symboltable.containsKey(reference.name)) {
             reference.setError(String.format("CH01: Undefined reference to constant '%s'", reference.name));

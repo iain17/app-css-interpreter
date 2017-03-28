@@ -14,13 +14,13 @@ public class InlineConstants implements Transform {
         replaceReferences(ast.root.body);
     }
 
-    public void replaceReferences(ArrayList<ASTNode> nodes) {
+    private void replaceReferences(ArrayList<ASTNode> nodes) {
         for(ASTNode node : nodes) {
             replaceReference(node);
         }
     }
 
-    public void replaceReference(ASTNode node) {
+    private void replaceReference(ASTNode node) {
         if(node instanceof Assignment) {
             Assignment assignment = (Assignment)node;
             symboltable.put(assignment.name.name, assignment.value);
@@ -40,7 +40,7 @@ public class InlineConstants implements Transform {
         }
     }
 
-    public void updateDeclaration(Declaration declaration) {
+    private void updateDeclaration(Declaration declaration) {
         if(declaration.value instanceof ConstantReference) {
             ConstantReference reference = (ConstantReference)declaration.value;
             Value refValue = symboltable.get(reference.name);
@@ -48,7 +48,7 @@ public class InlineConstants implements Transform {
         }
     }
 
-    public void updateOperation(Operation declaration) {
+    private void updateOperation(Operation declaration) {
         if(declaration.lhs instanceof ConstantReference) {
             ConstantReference reference = (ConstantReference)declaration.lhs;
             Value refValue = symboltable.get(reference.name);

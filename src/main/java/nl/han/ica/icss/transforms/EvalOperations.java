@@ -12,13 +12,13 @@ public class EvalOperations implements Transform {
         evalOperations(ast.root.body);
     }
 
-    public void evalOperations(ArrayList<ASTNode> nodes) {
+    private void evalOperations(ArrayList<ASTNode> nodes) {
         for(ASTNode node : nodes) {
             evalOperation(node);
         }
     }
 
-    public void evalOperation(ASTNode node) {
+    private void evalOperation(ASTNode node) {
         ArrayList<ASTNode> children = node.getChildren();
         if(!children.isEmpty()) {
             evalOperations(children);
@@ -34,13 +34,13 @@ public class EvalOperations implements Transform {
 
     }
 
-    public void updateDeclaration(Declaration declaration) {
+    private void updateDeclaration(Declaration declaration) {
         if(declaration.value instanceof Operation) {
             declaration.value = getValueFromOperation((Operation)declaration.value);
         }
     }
 
-    public void updateAssignment(Assignment assignment) {
+    private void updateAssignment(Assignment assignment) {
         if(assignment.value instanceof Operation) {
             assignment.value = getValueFromOperation((Operation)assignment.value);
         }
