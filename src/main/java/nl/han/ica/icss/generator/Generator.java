@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Generator {
 
 	public String generate(AST ast) {
-        StringBuilder builder = printNodes(ast.root.body, new ArrayList<ASTNode>());
+        StringBuilder builder = printNodes(ast.root.body, new ArrayList<>());
 		return builder.toString();
 	}
 
@@ -72,7 +72,8 @@ public class Generator {
                 continue;
             }
             Stylerule parentRule = (Stylerule)node;
-            builder.append(parentRule.selector + " > ");
+            builder.append(parentRule.selector);
+            builder.append(" > ");
         }
         builder.append(rule.selector);
         return builder;
