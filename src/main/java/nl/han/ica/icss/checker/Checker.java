@@ -22,6 +22,7 @@ public class Checker {
         }}
     );
 
+    //Used to keep track of variables.
     private HashMap<String,Value> symboltable;
 
 	public void check(AST ast) {
@@ -56,6 +57,7 @@ public class Checker {
         }
     }
 
+    //Check style rules.
     private void checkStylerules(AST ast) {
         for(ASTNode node : ast.root.body) {
             if(node instanceof Stylerule) {
@@ -64,6 +66,7 @@ public class Checker {
         }
     }
 
+    //Check style rule
     private void checkStyleRule(Stylerule rule) {
         for(ASTNode node : rule.getChildren()) {
             if(node instanceof Declaration) {
@@ -72,11 +75,11 @@ public class Checker {
             }
             if(node instanceof Stylerule) {
                 checkStyleRule((Stylerule)node);
-                continue;
             }
         }
     }
 
+    //Check a declaration.
     private void checkDeclaration(Declaration declaration) {
         //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
         if(declaration.value instanceof ConstantReference) {
@@ -92,6 +95,7 @@ public class Checker {
         }
     }
 
+    //Check value with a list of what is acceptable.
     private void checkValue(String name, Value value, ArrayList<ValueType> accepts) {
         ValueType type = getValueType(value);
         if(!accepts.contains(type)) {
@@ -112,6 +116,7 @@ public class Checker {
         }
     }
 
+    //Map value to a ValueType
     private ValueType getValueType(Value value) {
 	    if(value instanceof PixelLiteral) {
 	        return ValueType.PIXELVALUE;
@@ -139,6 +144,7 @@ public class Checker {
         return ValueType.UNDEFINED;
     }
 
+    //Check operations.
     private void checkOperation(Operation operation) {
 	    //lhs
 	    if(operation.lhs instanceof ConstantReference) {
@@ -154,6 +160,7 @@ public class Checker {
         if(operation.rhs instanceof Operation) {
             checkOperation((Operation) operation.rhs);
         }
+        //Check operation types. take left as leading.
         ValueType lhsType = getValueType(operation.lhs);
         ValueType rhsType = getValueType(operation.rhs);
         if(rhsType != lhsType) {
@@ -161,6 +168,7 @@ public class Checker {
         }
     }
 
+    //Check if constant exists in a constant reference.
     private void checkConstantReference(ConstantReference reference) {
         //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
         if(!symboltable.containsKey(reference.name)) {
