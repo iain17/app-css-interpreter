@@ -163,7 +163,7 @@ public class Checker {
         ValueType lhsType = getValueType(operation.lhs);
         ValueType rhsType = getValueType(operation.rhs);
         if(rhsType != lhsType) {
-            operation.setError(String.format("CH03: operation type mismatch. Right type (%s) is not of the same type as left (%s).", rhsType, lhsType));
+            parent.setError(String.format("CH03: operation type mismatch. Right type (%s) is not of the same type as left (%s).", rhsType, lhsType));
         }
     }
 
