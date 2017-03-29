@@ -20,7 +20,6 @@ nl/han/ica/icss/parser/ICSSParser$DeclarationValueContext.class
 nl/han/ica/icss/ast/PixelLiteral.class
 nl/han/ica/icss/parser/ICSSParser$ColorLiteralContext.class
 nl/han/ica/icss/parser/ICSSParser$StyleRuleContext.class
-nl/han/ica/icss/parser/ICSSListener.class
 nl/han/ica/icss/gui/Main$1.class
 nl/han/ica/icss/ast/Operation$Operator.class
 nl/han/ica/icss/ast/ASTNode.class
@@ -44,7 +43,6 @@ nl/han/ica/icss/checker/Checker$ValueType.class
 nl/han/ica/icss/ast/Value.class
 nl/han/ica/icss/parser/ICSSParser$DeclarationsContext.class
 nl/han/ica/icss/ast/Operation.class
-nl/han/ica/icss/parser/ICSSBaseListener.class
 nl/han/ica/icss/gui/Main$2.class
 nl/han/ica/icss/ast/ConstantReference.class
 nl/han/ica/icss/checker/Checker.class

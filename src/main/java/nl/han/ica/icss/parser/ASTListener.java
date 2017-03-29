@@ -37,7 +37,7 @@ public class ASTListener extends ICSSBaseListener {
         if(stack.peek() instanceof Assignment) {
             Assignment assignment = (Assignment) stack.pop();
             if(assignment.value == null) {
-                System.out.printf("%s has no value", assignment.name.name);
+                ast.root.setError(String.format("Constant '%s' has no value", assignment.name.name));
                 return;
             }
             ast.root.addChild(assignment);
@@ -146,13 +146,18 @@ public class ASTListener extends ICSSBaseListener {
                 operation.rhs = value;
             }
         }
+
+        if (stack.peek() instanceof Assignment) {
+            Assignment assignment = (Assignment) stack.peek();
+            assignment.value = value;
+        }
     }
 
     @Override public void exitOperation(@NotNull ICSSParser.OperationContext ctx) {
         if(stack.peek() instanceof Operation) {
             Operation operation = (Operation) stack.pop();
             if(operation.lhs == null || operation.rhs == null) {
-                System.out.printf("operation has no lhs(%s) or rhs(%s)", operation.lhs, operation.rhs);
+                ast.root.setError(String.format("operation has no lhs(%s) or rhs(%s)", operation.lhs, operation.rhs));
                 return;
             }
             ASTNode parent = (ASTNode)stack.peek();
@@ -186,7 +191,7 @@ public class ASTListener extends ICSSBaseListener {
         if(stack.peek() instanceof Declaration) {
             Declaration declaration = (Declaration) stack.pop();
             if(declaration.value == null) {
-                System.out.printf("%s has no value", declaration.property);
+                ast.root.setError(String.format("Declaration '%s' has no value", declaration.property));
                 return;
             }
             if(stack.peek() instanceof Stylerule) {

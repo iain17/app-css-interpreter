@@ -1,7 +1,7 @@
 grammar ICSS;
 
 //Parser
-stylesheet 	            : constants? styleRules?;
+stylesheet 	            : (constants | styleRules)*;
 
 styleRules              : styleRule+;
 styleRule               : selector START_BLOCK (declarations? styleRules? |  styleRules? declarations?) END_BLOCK;

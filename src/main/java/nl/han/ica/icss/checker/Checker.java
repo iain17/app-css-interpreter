@@ -29,9 +29,12 @@ public class Checker {
 	    //Clear
         symboltable = new HashMap<>();
 
+        if(ast.root.getChildren().isEmpty()) {
+            ast.root.setError("No input given.");
+        }
+
         //DO THE CHECKING HERE...
-        addVars(ast);
-        checkStylerules(ast);
+        checkNodes(ast.root.body);
 
 		//Save the symboltable.
         ast.symboltable = symboltable;
@@ -41,53 +44,49 @@ public class Checker {
         }
 	}
 
-    //CH02: Controleer of er geen constantes worden gedefinieerd die al bestaan.
-    private void addVars(AST ast) {
-	    for(ASTNode node : ast.root.body) {
-	        if(!(node instanceof Assignment)) {
-	            continue;
-            }
-            Assignment assignment = (Assignment)node;
-	        //Does this constant already exist?
-	        if(symboltable.containsKey(assignment.name.name)) {
-	            node.setError(String.format("CH02: constant '%s' already defined.", assignment.name.name));
-	            continue;
-            }
-	        symboltable.put(assignment.name.name, assignment.value);
-        }
-    }
-
     //Check style rules.
-    private void checkStylerules(AST ast) {
-        for(ASTNode node : ast.root.body) {
-            if(node instanceof Stylerule) {
-                checkStyleRule((Stylerule)node);
+    private void checkNodes(ArrayList<ASTNode> nodes) {
+        for(ASTNode node : nodes) {
+            if(!node.getChildren().isEmpty()) {
+                checkNodes(node.getChildren());
             }
-        }
-    }
 
-    //Check style rule
-    private void checkStyleRule(Stylerule rule) {
-        for(ASTNode node : rule.getChildren()) {
+            if(node instanceof Assignment) {
+                addVar((Assignment)node);
+            }
+
             if(node instanceof Declaration) {
                 checkDeclaration((Declaration)node);
                 continue;
             }
-            if(node instanceof Stylerule) {
-                checkStyleRule((Stylerule)node);
-            }
         }
+    }
+
+    //CH02: Controleer of er geen constantes worden gedefinieerd die al bestaan.
+    private void addVar(Assignment assignment) {
+        //Does this constant already exist?
+        if(symboltable.containsKey(assignment.name.name)) {
+            assignment.setError(String.format("CH02: constant '%s' already defined.", assignment.name.name));
+            return;
+        }
+        if(assignment.value instanceof ConstantReference) {
+            checkConstantReference((ConstantReference)assignment.value, assignment);
+        }
+        if(assignment.value instanceof Operation) {
+            checkOperation((Operation)assignment.value, assignment);
+        }
+        symboltable.put(assignment.name.name, assignment.value);
     }
 
     //Check a declaration.
     private void checkDeclaration(Declaration declaration) {
         //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
         if(declaration.value instanceof ConstantReference) {
-            checkConstantReference((ConstantReference)declaration.value);
+            checkConstantReference((ConstantReference)declaration.value, declaration);
         }
 
         if(declaration.value instanceof Operation) {
-            checkOperation((Operation) declaration.value);
+            checkOperation((Operation) declaration.value, declaration);
         }
 
         if (semantics.containsKey(declaration.property)) {
@@ -145,20 +144,20 @@ public class Checker {
     }
 
     //Check operations.
-    private void checkOperation(Operation operation) {
+    private void checkOperation(Operation operation, ASTNode parent) {
 	    //lhs
 	    if(operation.lhs instanceof ConstantReference) {
-	        checkConstantReference((ConstantReference)operation.lhs);
+	        checkConstantReference((ConstantReference)operation.lhs, parent);
         }
         if(operation.lhs instanceof Operation) {
-            checkOperation((Operation) operation.lhs);
+            checkOperation((Operation) operation.lhs, parent);
         }
         //rhs
         if(operation.rhs instanceof ConstantReference) {
-            checkConstantReference((ConstantReference)operation.rhs);
+            checkConstantReference((ConstantReference)operation.rhs, parent);
         }
         if(operation.rhs instanceof Operation) {
-            checkOperation((Operation) operation.rhs);
+            checkOperation((Operation) operation.rhs, parent);
         }
         //Check operation types. take left as leading.
         ValueType lhsType = getValueType(operation.lhs);
@@ -169,10 +168,10 @@ public class Checker {
     }
 
     //Check if constant exists in a constant reference.
-    private void checkConstantReference(ConstantReference reference) {
+    private void checkConstantReference(ConstantReference reference, ASTNode parent) {
         //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
         if(!symboltable.containsKey(reference.name)) {
-            reference.setError(String.format("CH01: Undefined reference to constant '%s'", reference.name));
+            parent.setError(String.format("CH01: Undefined reference to constant '%s'", reference.name));
         }
     }
 
