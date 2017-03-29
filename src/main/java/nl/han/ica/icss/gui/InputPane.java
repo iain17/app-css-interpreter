@@ -24,12 +24,6 @@ public class InputPane extends BorderPane {
 		title.setPadding(new Insets(5, 5, 5, 5));
 		
 		this.setTop(title);
-		setText("$a = 10px;\n" +
-				"$b = $a;\n" +
-				"\n" +
-				"a {\n" +
-				"\twidth: $b;\n" +
-				"}");
 		this.setCenter(content);
 	}
 	public void setText(String text) {
