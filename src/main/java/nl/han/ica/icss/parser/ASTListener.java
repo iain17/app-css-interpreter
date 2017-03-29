@@ -93,8 +93,7 @@ public class ASTListener extends ICSSBaseListener {
             Operation operation = (Operation) stack.peek();
             if(operation.lhs == null) {
                 operation.lhs = value;
-            }
-            if(operation.rhs == null) {
+            }else if(operation.rhs == null) {
                 operation.rhs = value;
             }
         }
