@@ -55,7 +55,7 @@ public class EvalOperations implements Transform {
             return new PercentageLiteral(total);
         }
         if(operation.lhs instanceof ColorLiteral) {
-            return new ColorLiteral("#"+Integer.toHexString(total).toUpperCase());
+            return new ColorLiteral(String.format("#%06X", total));
         }
         return null;
     }

@@ -166,6 +166,17 @@ public class Checker {
         if(rhsType != lhsType) {
             parent.setError(String.format("CH03: operation type mismatch. Right type (%s) is not of the same type as left (%s).", rhsType, lhsType));
         }
+
+        checkStupidOperationRule(lhsType, parent);
+        checkStupidOperationRule(rhsType, parent);
+    }
+
+    //For some stupid reason only pixels and percentages may be used in calculations.
+    //So goodbye color operations ;-(. Don't blame me, I'm just a messenger. The rules were not made by me.
+    private void checkStupidOperationRule(ValueType valueType, ASTNode parent) {
+	    if(valueType != ValueType.PIXELVALUE && valueType != ValueType.PERCENTAGE) {
+	        parent.setError("A operation may only contain pixel or percentage values!");
+        }
     }
 
     //Check if constant exists in a constant reference.
