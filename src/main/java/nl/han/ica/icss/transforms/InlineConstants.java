@@ -11,7 +11,26 @@ public class InlineConstants implements Transform {
     @Override
     public void apply(AST ast) {
         symboltable = new HashMap<>();
+        buildSymbolsTable(ast.root.body);
         replaceReferences(ast.root.body);
+    }
+
+    private void buildSymbolsTable(ArrayList<ASTNode> nodes) {
+        for(ASTNode node : nodes) {
+            if(node == null) {
+                continue;
+            }
+            ArrayList<ASTNode> childrenNodes = node.getChildren();
+
+            if(childrenNodes != null && !childrenNodes.isEmpty()) {
+                buildSymbolsTable(node.getChildren());
+            }
+
+            if(node instanceof Assignment) {
+                Assignment assignment = (Assignment)node;
+                symboltable.put(assignment.name.name, assignment.value);
+            }
+        }
     }
 
     private void replaceReferences(ArrayList<ASTNode> nodes) {
@@ -21,53 +40,40 @@ public class InlineConstants implements Transform {
     }
 
     private void replaceReference(ASTNode node) {
-        if(node instanceof Assignment) {
-            Assignment assignment = (Assignment)node;
-            symboltable.put(assignment.name.name, assignment.value);
-            return;
-        }
         ArrayList<ASTNode> children = node.getChildren();
         if(!children.isEmpty()) {
             replaceReferences(children);
         }
 
         if(node instanceof Declaration) {
-            updateDeclaration((Declaration)node);
+            Declaration declaration = (Declaration)node;
+            declaration.value = resolveValue(declaration.value);
+        }
+
+        if(node instanceof Assignment) {
+            Assignment assignment = (Assignment)node;
+            assignment.value = resolveValue(assignment.value);
         }
 
         if(node instanceof Operation) {
-            updateOperation((Operation)node);
+            Operation operation = (Operation)node;
+            operation.lhs = resolveValue(operation.lhs);
+            operation.rhs = resolveValue(operation.rhs);
         }
     }
 
-    private void updateDeclaration(Declaration declaration) {
-        if(declaration.value instanceof ConstantReference) {
-            ConstantReference reference = (ConstantReference)declaration.value;
-            Value refValue = symboltable.get(reference.name);
-            declaration.value = refValue;
+    private Value resolveValue(Value value) {
+        while(value instanceof ConstantReference) {
+            ConstantReference reference = (ConstantReference)value;
+            value = symboltable.get(reference.name);
         }
-    }
-
-    private void updateOperation(Operation declaration) {
-        if(declaration.lhs instanceof ConstantReference) {
-            ConstantReference reference = (ConstantReference)declaration.lhs;
-            Value refValue = symboltable.get(reference.name);
-            declaration.lhs = refValue;
+        if(value instanceof Operation) {
+            Operation operation = (Operation)value;
+            operation.lhs = resolveValue(operation.lhs);
+            operation.rhs = resolveValue(operation.rhs);
+            value = operation;
         }
-
-        if(declaration.rhs instanceof ConstantReference) {
-            ConstantReference reference = (ConstantReference)declaration.rhs;
-            Value refValue = symboltable.get(reference.name);
-            declaration.rhs = refValue;
-        }
-
-        if(declaration.lhs instanceof Operation) {
-            updateOperation((Operation)declaration.lhs);
-        }
-
-        if(declaration.rhs instanceof Operation) {
-            updateOperation((Operation)declaration.rhs);
-        }
+        return value;
     }
 
 }

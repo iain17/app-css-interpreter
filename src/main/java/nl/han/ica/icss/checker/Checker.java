@@ -34,6 +34,7 @@ public class Checker {
         }
 
         //DO THE CHECKING HERE...
+        buildSymbolsTable(ast.root.body);
         checkNodes(ast.root.body);
 
 		//Save the symboltable.
@@ -43,6 +44,21 @@ public class Checker {
             ast.checked = true;
         }
 	}
+
+	//Another weird rule: You may use constants that are defined later.
+    //So we'll build the symbols tree prior to the further checks.
+    //aka: 'Je mag constantes gebruiken die pas verderop in het document gedefinieerd worden.'
+    private void buildSymbolsTable(ArrayList<ASTNode> nodes) {
+        for(ASTNode node : nodes) {
+            if(!node.getChildren().isEmpty()) {
+                buildSymbolsTable(node.getChildren());
+            }
+
+            if(node instanceof Assignment) {
+                addVar((Assignment)node);
+            }
+        }
+    }
 
     //Check style rules.
     private void checkNodes(ArrayList<ASTNode> nodes) {
@@ -62,12 +78,21 @@ public class Checker {
         }
     }
 
+    private void addVar(Assignment assignment) {
+        //Does this constant already exist?
+        if(symboltable.containsKey(assignment.name.name)) {
+            assignment.setError(String.format("CH02: constant '%s' already defined.", assignment.name.name));
+            return;
+        }
+        symboltable.put(assignment.name.name, assignment.value);
+    }
+
     //Check a declaration.
     private void checkDeclaration(Declaration declaration) {
         checkValue(declaration.value, declaration);
         //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
         if (semantics.containsKey(declaration.property)) {
-            checkValueSemantically(String.format("Property %s", declaration.property), declaration.value, semantics.get(declaration.property), declaration);
+            checkValueSemantically(String.format("property %s", declaration.property), declaration.value, semantics.get(declaration.property), declaration);
         }
     }
 
@@ -96,13 +121,7 @@ public class Checker {
     //CH02: Controleer of er geen constantes worden gedefinieerd die al bestaan.
     //Controlleer ook gelijk de value van de assignment.
     private void checkAssignment(Assignment assignment) {
-        //Does this constant already exist?
-        if(symboltable.containsKey(assignment.name.name)) {
-            assignment.setError(String.format("CH02: constant '%s' already defined.", assignment.name.name));
-            return;
-        }
         checkValue(assignment.value, assignment);
-        symboltable.put(assignment.name.name, assignment.value);
     }
 
     private void checkValue(Value value, ASTNode parent) {
@@ -136,6 +155,9 @@ public class Checker {
 	        ConstantReference reference = (ConstantReference)value;
             if(symboltable.containsKey(reference.name)) {
                 Value refValue = symboltable.get(reference.name);
+                if(refValue == value) {
+                    return ValueType.UNDEFINED;
+                }
                 return getValueType(refValue);
             }
         }
