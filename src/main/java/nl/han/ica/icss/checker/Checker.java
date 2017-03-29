@@ -52,7 +52,7 @@ public class Checker {
             }
 
             if(node instanceof Assignment) {
-                addVar((Assignment)node);
+                checkAssignment((Assignment)node);
             }
 
             if(node instanceof Declaration) {
@@ -62,56 +62,55 @@ public class Checker {
         }
     }
 
+    //Check a declaration.
+    private void checkDeclaration(Declaration declaration) {
+        checkValue(declaration.value, declaration);
+        //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
+        if (semantics.containsKey(declaration.property)) {
+            checkValueSemantically(String.format("Property %s", declaration.property), declaration.value, semantics.get(declaration.property), declaration);
+        }
+    }
+
+    //Check value with a list of what is acceptable.
+    private void checkValueSemantically(String name, Value value, ArrayList<ValueType> accepts, ASTNode parent) {
+        ValueType type = getValueType(value);
+        if(!accepts.contains(type)) {
+            switch(type) {
+                case PIXELVALUE:
+                    parent.setError(String.format("CH04: Unexpected pixel value for %s", name));
+                    break;
+                case PERCENTAGE:
+                    parent.setError(String.format("CH04: Unexpected percentage value for %s", name));
+                    break;
+                case COLORVALUE:
+                    parent.setError(String.format("CH04: Unexpected color value for %s", name));
+                    break;
+                default:
+                case UNDEFINED:
+                    parent.setError(String.format("CH04: Unexpected undefined value for %s", name));
+                    break;
+            }
+        }
+    }
+
     //CH02: Controleer of er geen constantes worden gedefinieerd die al bestaan.
-    private void addVar(Assignment assignment) {
+    //Controlleer ook gelijk de value van de assignment.
+    private void checkAssignment(Assignment assignment) {
         //Does this constant already exist?
         if(symboltable.containsKey(assignment.name.name)) {
             assignment.setError(String.format("CH02: constant '%s' already defined.", assignment.name.name));
             return;
         }
-        if(assignment.value instanceof ConstantReference) {
-            checkConstantReference((ConstantReference)assignment.value, assignment);
-        }
-        if(assignment.value instanceof Operation) {
-            checkOperation((Operation)assignment.value, assignment);
-        }
+        checkValue(assignment.value, assignment);
         symboltable.put(assignment.name.name, assignment.value);
     }
 
-    //Check a declaration.
-    private void checkDeclaration(Declaration declaration) {
-        //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
-        if(declaration.value instanceof ConstantReference) {
-            checkConstantReference((ConstantReference)declaration.value, declaration);
+    private void checkValue(Value value, ASTNode parent) {
+        if(value instanceof ConstantReference) {
+            checkConstantReference((ConstantReference)value, parent);
         }
-
-        if(declaration.value instanceof Operation) {
-            checkOperation((Operation) declaration.value, declaration);
-        }
-
-        if (semantics.containsKey(declaration.property)) {
-            checkValue("property " + declaration.property, declaration.value, semantics.get(declaration.property));
-        }
-    }
-
-    //Check value with a list of what is acceptable.
-    private void checkValue(String name, Value value, ArrayList<ValueType> accepts) {
-        ValueType type = getValueType(value);
-        if(!accepts.contains(type)) {
-            switch(type) {
-                case PIXELVALUE:
-                    value.setError(String.format("CH04: Unexpected pixel value for %s", name));
-                    break;
-                case PERCENTAGE:
-                    value.setError(String.format("CH04: Unexpected percentage value for %s", name));
-                    break;
-                case COLORVALUE:
-                    value.setError(String.format("CH04: Unexpected color value for %s", name));
-                    break;
-                case UNDEFINED:
-                    value.setError(String.format("CH04: Unexpected undefined value for %s", name));
-                    break;
-            }
+        if(value instanceof Operation) {
+            checkOperation((Operation)value, parent);
         }
     }
 
@@ -159,6 +158,8 @@ public class Checker {
         if(operation.rhs instanceof Operation) {
             checkOperation((Operation) operation.rhs, parent);
         }
+        checkValue(operation.lhs, operation);
+        checkValue(operation.rhs, operation);
         //Check operation types. take left as leading.
         ValueType lhsType = getValueType(operation.lhs);
         ValueType rhsType = getValueType(operation.rhs);
