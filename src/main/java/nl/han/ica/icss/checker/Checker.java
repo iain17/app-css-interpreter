@@ -87,12 +87,39 @@ public class Checker {
         symboltable.put(assignment.name.name, assignment.value);
     }
 
+    //This check, checks if we don't do operation like:
+    //$a = $a;//Which would cause an infinite loop when transforming.
+    private boolean isDoubleReferenced(ASTNode node, String find) {
+        if(node instanceof Operation) {
+            Operation operation = (Operation)node;
+            if(isDoubleReferenced(operation.lhs, find)) {
+                return true;
+            }
+            if(isDoubleReferenced(operation.rhs, find)) {
+                return true;
+            }
+        }
+	    if(node instanceof ConstantReference) {
+            ConstantReference reference = (ConstantReference)node;
+            if(Objects.equals(reference.name, find)) {
+                return true;
+            } else {
+                if(symboltable.containsKey(reference.name)) {
+                    isDoubleReferenced(symboltable.get(reference.name), find);
+                }
+            }
+        }
+        return false;
+    }
+
     //Check a declaration.
     private void checkDeclaration(Declaration declaration) {
         checkValue(declaration.value, declaration);
         //CH01: Controleer of er geen constantes in declaraties worden gebruikt die nog niet gedefinieerd zijn.
         if (semantics.containsKey(declaration.property)) {
             checkValueSemantically(String.format("property %s", declaration.property), declaration.value, semantics.get(declaration.property), declaration);
+        } else {
+            declaration.setError("Only the properties: color, background-color, width and height are allowed.");
         }
     }
 
@@ -122,6 +149,10 @@ public class Checker {
     //Controlleer ook gelijk de value van de assignment.
     private void checkAssignment(Assignment assignment) {
         checkValue(assignment.value, assignment);
+        //Detect inception limbo. $a = $a;
+        if(isDoubleReferenced(assignment.value, assignment.name.name)) {
+            assignment.setError(String.format("You cannot use constant %s as a value of that constant.", assignment.name.name));
+        }
     }
 
     private void checkValue(Value value, ASTNode parent) {
